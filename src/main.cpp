@@ -30,7 +30,8 @@ int nFrames;
 
 vec3 **controlPoints;
 vec3 **du, **dv;
-int M,N; // the dimensions of the control points matrix for a total of MxN control points
+int M = 10;
+int N = 10; // the dimensions of the control points matrix for a total of MxN control points
 
 GLuint buf = 0;
 GLuint vao = 0;
@@ -242,6 +243,82 @@ void relocatePoint(int _x, int _y,int pos){
 
 }
 
+void wavIt(float t){
+    vector<GLfloat> patchData;
+
+    for (int i=0;i<M-1;i++) {
+        for (int j=0;j<N-1;j++) {
+        controlPoints[i][j].y = 4*sin(i + t) + 2*sin(j+t)*cos(j+t);
+        }
+    }
+    findDerivatives();
+    int index = 0;
+    for (int i=0;i<M-1;i++) {
+        for (int j=0;j<N-1;j++) {
+            // control points
+            patchData.push_back(controlPoints[i][j].x);
+            patchData.push_back(controlPoints[i][j].y);
+            patchData.push_back(controlPoints[i][j].z);
+            index+=3;
+            patchData.push_back(controlPoints[i+1][j].x);
+            patchData.push_back(controlPoints[i+1][j].y);
+            patchData.push_back(controlPoints[i+1][j].z);
+            index+=3;
+            patchData.push_back(controlPoints[i+1][j+1].x);
+            patchData.push_back(controlPoints[i+1][j+1].y);
+            patchData.push_back(controlPoints[i+1][j+1].z);
+            index+=3;
+            patchData.push_back(controlPoints[i][j+1].x);
+            patchData.push_back(controlPoints[i][j+1].y);
+            patchData.push_back(controlPoints[i][j+1].z);
+            index+=3;
+
+            // now partial derivatives du
+            patchData.push_back(du[i][j].x);
+            patchData.push_back(du[i][j].y);
+            patchData.push_back(du[i][j].z);
+            index+=3;
+            patchData.push_back(du[i+1][j].x);
+            patchData.push_back(du[i+1][j].y);
+            patchData.push_back(du[i+1][j].z);
+            index+=3;
+            patchData.push_back(du[i+1][j+1].x);
+            patchData.push_back(du[i+1][j+1].y);
+            patchData.push_back(du[i+1][j+1].z);
+            index+=3;
+            patchData.push_back(du[i][j+1].x);
+            patchData.push_back(du[i][j+1].y);
+            patchData.push_back(du[i][j+1].z);
+            index+=3;
+
+            // now partial derivatives dv
+            patchData.push_back(dv[i][j].x);
+            patchData.push_back(dv[i][j].y);
+            patchData.push_back(dv[i][j].z);
+            index+=3;
+            patchData.push_back(dv[i+1][j].x);
+            patchData.push_back(dv[i+1][j].y);
+            patchData.push_back(dv[i+1][j].z);
+            index+=3;
+            patchData.push_back(dv[i+1][j+1].x);
+            patchData.push_back(dv[i+1][j+1].y);
+            patchData.push_back(dv[i+1][j+1].z);
+            index+=3;
+            patchData.push_back(dv[i][j+1].x);
+            patchData.push_back(dv[i][j+1].y);
+            patchData.push_back(dv[i][j+1].z);
+            index+=3;
+
+        }
+    }
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    glBufferData(GL_ARRAY_BUFFER, patchData.size() * sizeof(float), patchData.data(), GL_STATIC_DRAW);
+
+}
+
+
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -252,10 +329,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
         tessLevel--;
 
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
-        relocatePoint(0,0,1);
-    if (key == GLFW_KEY_S && action == GLFW_PRESS)
-        relocatePoint(0,0,-1);
+    // if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    //     relocatePoint(0,0,1);
+    // if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    //     relocatePoint(0,0,-1);
 }
 
 
@@ -308,6 +385,31 @@ void readSurface(const char* filename)
 
     printf("Derivatives computed.\n");
 
+}
+
+void createSurface(float step)
+{
+
+	controlPoints = (vec3 **)malloc(sizeof(vec3*)*(M));
+	du = (vec3 **)malloc(sizeof(vec3*)*(M));
+	dv = (vec3 **)malloc(sizeof(vec3*)*(M));
+	for (int i=0;i<M;i++)
+	{
+		controlPoints[i] = (vec3 *)malloc(sizeof(vec3)*(N));
+		du[i] = (vec3 *)malloc(sizeof(vec3)*(N));
+		dv[i] = (vec3 *)malloc(sizeof(vec3)*(N));
+	}
+    for(int i = 0; i<M; i++){
+        for(int j = 0; j<N; j++){
+            controlPoints[i][j] = vec3(step*i, 0, step*j);
+        }
+    }
+
+    printf("%dx%d control points created.\n",M,N);
+
+	findDerivatives();
+
+    printf("Derivatives computed.\n");
 }
 
 int main(void)
@@ -373,7 +475,7 @@ int main(void)
 
     vector<GLfloat> patchData;
 
-    readSurface("surfaceData.txt");
+    createSurface(10);
 
     int index = 0;
     for (i=0;i<M-1;i++) {
@@ -501,7 +603,7 @@ int main(void)
     	// angle += rotSpeed * deltaT;
     	// if (angle > glm::two_pi<float>()) angle -= glm::two_pi<float>();
 
-        cameraPos = vec3(50,90,50);
+        cameraPos = vec3(-50,90,-50);
         // cameraPos = vec3(50*2.0f * cos(angle), 60+1.5f, 50*2.0f * sin(angle));
 
         view = glm::lookAt(cameraPos, vec3(0.0f,0.0f,0.0f), vec3(0.0f,1.0f,0.0f));
@@ -517,6 +619,8 @@ int main(void)
         mat4 mv = view * model;
         mat3 nm = mat3( vec3(mv[0]), vec3(mv[1]), vec3(mv[2]) );
 
+
+        wavIt(t);
         glUseProgram(program);
 
     	glUniformMatrix4fv(glGetUniformLocation(program,"ModelViewMatrix"), 1, GL_FALSE, &(mv)[0][0]);
