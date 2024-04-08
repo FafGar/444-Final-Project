@@ -24,7 +24,11 @@ int tessLevel;
 
 GLuint program;
 GLuint pointProgram;
+
 vec3 cameraPos;
+vec3 lookAtPoint = vec3(0,0,0);
+vec3 camZVec;
+float camSpeed = 1.2f;
 
 int lastTime;
 int nFrames;
@@ -262,9 +266,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         tessLevel--;
 
     if(key == GLFW_KEY_W)
-        cameraPos.z -= 15 * deltaT;
+        cameraPos -= camZVec*camSpeed*deltaT;
     if(key == GLFW_KEY_S)
-        cameraPos.z += 15 * deltaT;
+        cameraPos += camZVec*camSpeed*deltaT;
 
 
 }
@@ -508,8 +512,8 @@ int main(void)
 
         
         // cameraPos = vec3(50*2.0f * cos(angle), 60+1.5f, 50*2.0f * sin(angle));
-
-        view = glm::lookAt(cameraPos, vec3(0.0f,0.0f,0.0f), vec3(0.0f,1.0f,0.0f));
+        camZVec = glm::normalize(lookAtPoint- cameraPos);
+        view = glm::lookAt(cameraPos, lookAtPoint, vec3(0.0f,1.0f,0.0f));
 
         model = mat4(1.0f);
         //model = glm::translate(model, vec3(0.0f,-1.5f,0.0f));
