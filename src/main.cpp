@@ -26,9 +26,9 @@ GLuint program;
 GLuint pointProgram;
 
 vec3 cameraPos;
-vec3 lookAtPoint = vec3(0,0,0);
+vec3 lookAtPoint = vec3(10,0,10);
 vec3 camZVec;
-float camSpeed = 1.2f;
+float camSpeed = 15.f;
 
 int lastTime;
 int nFrames;
@@ -265,9 +265,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         tessLevel--;
 
     if(key == GLFW_KEY_W)
-        cameraPos -= camZVec*camSpeed*deltaT;
-    if(key == GLFW_KEY_S)
         cameraPos += camZVec*camSpeed*deltaT;
+    if(key == GLFW_KEY_S)
+        cameraPos -= camZVec*camSpeed*deltaT;
 
 
 }
@@ -480,7 +480,7 @@ int main(void)
     tPrev = 0;
     rotSpeed = glm::pi<float>()/8.0f;
 	
-    cameraPos = vec3(-50,90,-50);
+    cameraPos = vec3(-40,120,-40);
 
 
     while (!glfwWindowShouldClose(window))
@@ -544,16 +544,16 @@ int main(void)
 
 
 
-        glUseProgram(pointProgram);
-        glUniformMatrix4fv(glGetUniformLocation(pointProgram,"projection"), 1, GL_FALSE, &(projection[0][0]));
-        glUniformMatrix4fv(glGetUniformLocation(pointProgram,"view"), 1, GL_FALSE, &(view[0][0]));
-        for (i=0;i<M;i++) {
-            for (j=0;j<N;j++) {
-                model = glm::translate(glm::mat4(1.0), controlPoints[i][j]);
-                glUniformMatrix4fv(glGetUniformLocation(pointProgram,"model"), 1, GL_FALSE, &(model[0][0]));
-                cube.render();
-            }
-        }
+        // glUseProgram(pointProgram);
+        // glUniformMatrix4fv(glGetUniformLocation(pointProgram,"projection"), 1, GL_FALSE, &(projection[0][0]));
+        // glUniformMatrix4fv(glGetUniformLocation(pointProgram,"view"), 1, GL_FALSE, &(view[0][0]));
+        // for (i=0;i<M;i++) {
+        //     for (j=0;j<N;j++) {
+        //         model = glm::translate(glm::mat4(1.0), controlPoints[i][j]);
+        //         glUniformMatrix4fv(glGetUniformLocation(pointProgram,"model"), 1, GL_FALSE, &(model[0][0]));
+        //         cube.render();
+        //     }
+        // }
 
 
 		showFPS(window);
