@@ -12,7 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
 #include <iostream>
-
+#include <glm/gtc/random.hpp>
 
 using glm::vec3;
 using glm::vec4;
@@ -187,6 +187,7 @@ void wavIt(float t){
         controlPoints[i][j].y = 4*sin(i + t) + 2*sin(j+t)*cos(j+t);
         }
     }
+
     findDerivatives();
     int index = 0;
     for (int i=0;i<M-1;i++) {
@@ -254,8 +255,6 @@ void wavIt(float t){
 
 }
 
-
-
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -272,8 +271,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 
 }
-
-
 
 void showFPS(GLFWwindow* window) {
         double currentTime = glfwGetTime();
@@ -527,13 +524,15 @@ int main(void)
         mat3 nm = mat3( vec3(mv[0]), vec3(mv[1]), vec3(mv[2]) );
 
 
-        wavIt(t);
+        // wavIt(t);
         glUseProgram(program);
 
     	glUniformMatrix4fv(glGetUniformLocation(program,"ModelViewMatrix"), 1, GL_FALSE, &(mv)[0][0]);
     	glUniformMatrix3fv(glGetUniformLocation(program,"NormalMatrix"), 1, GL_FALSE, &(nm)[0][0]);
     	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &(mvp)[0][0]);
     	glUniformMatrix4fv(glGetUniformLocation(program,"ViewportMatrix"), 1, GL_FALSE, &(viewport)[0][0]);
+
+        glUniform1f(glGetUniformLocation(program, "time"), t);
 
         glUniform1i(glGetUniformLocation(program,"TessLevel"), tessLevel);
 
