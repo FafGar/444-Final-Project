@@ -28,7 +28,8 @@ GLuint pointProgram;
 vec3 cameraPos;
 vec3 lookAtPoint = vec3(10,0,10);
 vec3 camZVec;
-float camSpeed = 15.f;
+float camSpeed = 2.0f;
+float camRotSpeed = 2.5f;
 
 int lastTime;
 int nFrames;
@@ -255,6 +256,11 @@ void wavIt(float t){
 
 }
 
+static void rotateCam(float a){
+    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(a), glm::vec3(0.0f, 1.0f, 0.0f));
+    cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
+}
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -265,9 +271,19 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         tessLevel--;
 
     if(key == GLFW_KEY_W)
-        cameraPos += camZVec*camSpeed*deltaT;
+        cameraPos += camZVec*camSpeed;
     if(key == GLFW_KEY_S)
-        cameraPos -= camZVec*camSpeed*deltaT;
+        cameraPos -= camZVec*camSpeed;
+
+    if(key == GLFW_KEY_A)
+        rotateCam(-camRotSpeed);
+    if(key == GLFW_KEY_D)
+        rotateCam(camRotSpeed);
+
+    if(key == GLFW_KEY_Q)
+        cameraPos -= glm::vec3(0.0,1.0,0.0) * camSpeed;
+    if(key == GLFW_KEY_E)
+        cameraPos += glm::vec3(0.0,1.0,0.0) * camSpeed;
 
 
 }

@@ -76,10 +76,10 @@ void main()
     //FragColor = mix( color, LineColor, mixVal );
     //FragColor = color;
 
-    Material.Rough = 0.01;
+    Material.Rough = 0.1;
     Material.Metal = false;
     //Material.Color = vec3(0.25,0.5,1);
-    Material.Color = vec3(42.0/255.0,183.0/255.0,191.0/255.0);
+    Material.Color = vec3(42.0/255.0,183.0/255.0,200.0/255.0);
 
     vec3 surfaceColor = vec3(0);
     vec3 n = normalize(Normal);
@@ -90,4 +90,5 @@ void main()
     // Gamma
     surfaceColor = pow( surfaceColor, vec3(1.0/2.2) );
     FragColor = vec4(surfaceColor, 1);
+    //FragColor = vec4(n, 1);
 }
