@@ -22,11 +22,11 @@ struct GerstnerWave {
 } gerstner_waves[5];
 
 void initializeGerstnerWaves() {
-    gerstner_waves[0] = GerstnerWave(vec2(0.707f, 0.707f), 1.9f, 0.9f, 0.15f, 1.2f);
-    gerstner_waves[1] = GerstnerWave(vec2(-0.5f, 0.866f), 5.5f, 1.3f, 0.01f, 0.8f);
-    gerstner_waves[2] = GerstnerWave(vec2(0.258f, -0.966f), 0.8f, 2.0f, 0.06f, 1.3f);
-    gerstner_waves[3] = GerstnerWave(vec2(-0.866f, -0.5f), 2.2f, 0.9f, 0.05f, 1.8f);
-    gerstner_waves[4] = GerstnerWave(vec2(-0.866f, -0.5f), 1.4f, 1.3f, 0.02f, 1.0f);
+    gerstner_waves[0] = GerstnerWave(vec2(0.707f, 0.707f), 1.9f, 0.4f, 0.05f, 0.7f);
+    gerstner_waves[1] = GerstnerWave(vec2(-0.5f, 0.866f), 4.5f, 0.6f, 0.01f, 0.8f);
+    gerstner_waves[2] = GerstnerWave(vec2(0.258f, -0.966f), 0.8f, 0.4f, 0.06f, 0.2f);
+    gerstner_waves[3] = GerstnerWave(vec2(-0.866f, -0.5f), 2.2f, 0.8f, 0.05f, 0.4f);
+    gerstner_waves[4] = GerstnerWave(vec2(-0.707f, -0.866f), 6.6f, 0.9f, 0.02f, 0.5f);
 }
 
 vec3 gerstner_wave_normal(vec3 position, float time) {
