@@ -31,10 +31,15 @@ vec3 camZVec;
 float camSpeed = 2.0f;
 float camRotSpeed = 2.5f;
 
+float mouseXSpeed = 0.2f;
+float mouseYSpeed = 1.0f;
+
 int lastTime;
 int nFrames;
 
 float tPrev, t, deltaT;
+
+bool gLeftPressed = false;
 
 vec3 **controlPoints;
 vec3 **du, **dv;
@@ -337,6 +342,52 @@ void createSurface(float step)
     printf("Derivatives computed.\n");
 }
 
+void rotateCamera(GLFWwindow* window, double xpos, double ypos)
+{
+    static bool firstMouse = true;
+    static double lastX, lastY;
+    static float tPitch = 0.5;
+    static float yaw = 0;
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = lastX - xpos;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    if (!gLeftPressed)
+    {
+        return;
+    }
+
+    rotateCam(mouseXSpeed * xoffset);
+
+    glm::vec3 camright = glm::cross(glm::vec3(0.0,1.0,0.0), camZVec);
+    glm::vec3 camup = glm::cross(camright, camZVec);
+    cameraPos += camup * yoffset * mouseYSpeed;
+
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        gLeftPressed = true;
+    }
+    else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+    {
+        gLeftPressed = false;
+    }
+}
+
 int main(void)
 {
 
@@ -367,6 +418,9 @@ int main(void)
     }
     glfwSetKeyCallback(window, key_callback);
     glfwMakeContextCurrent(window);
+
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetCursorPosCallback(window, rotateCamera);
 
     glfwSwapInterval(1);
 
@@ -590,3 +644,4 @@ int main(void)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
+

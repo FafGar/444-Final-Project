@@ -79,7 +79,7 @@ void main()
     Material.Rough = 0.1;
     Material.Metal = false;
     //Material.Color = vec3(0.25,0.5,1);
-    Material.Color = vec3(42.0/255.0,183.0/255.0,200.0/255.0);
+    Material.Color = vec3(15.0/255.0,206.0/255.0,255.0/255.0);
 
     vec3 surfaceColor = vec3(0);
     vec3 n = normalize(Normal);
