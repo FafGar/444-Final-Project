@@ -43,8 +43,8 @@ bool gLeftPressed = false;
 
 vec3 **controlPoints;
 vec3 **du, **dv;
-int M = 10;
-int N = 10; // the dimensions of the control points matrix for a total of MxN control points
+int M = 50;
+int N = 50; // the dimensions of the control points matrix for a total of MxN control points
 
 GLuint buf = 0;
 GLuint vao = 0;

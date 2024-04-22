@@ -19,13 +19,14 @@ struct GerstnerWave {
     float steepness;
     float frequency;
     float speed;
-} gerstner_waves[4];
+} gerstner_waves[5];
 
 void initializeGerstnerWaves() {
-    gerstner_waves[0] = GerstnerWave(vec2(0.707f, 0.707f), 1.9f, 0.9f, 0.3f, 1.2f);
-    gerstner_waves[1] = GerstnerWave(vec2(-0.5f, 0.866f), 5.5f, 0.9f, 0.08f, 1.5f);
-    gerstner_waves[2] = GerstnerWave(vec2(0.258f, -0.966f), 1.8f, 0.7f, 0.12f, 1.3f);
-    gerstner_waves[3] = GerstnerWave(vec2(-0.866f, -0.5f), 2.2f, 0.9f, 0.15f, 1.8f);
+    gerstner_waves[0] = GerstnerWave(vec2(0.707f, 0.707f), 1.9f, 0.9f, 0.15f, 1.2f);
+    gerstner_waves[1] = GerstnerWave(vec2(-0.5f, 0.866f), 5.5f, 1.3f, 0.01f, 0.8f);
+    gerstner_waves[2] = GerstnerWave(vec2(0.258f, -0.966f), 0.8f, 2.0f, 0.06f, 1.3f);
+    gerstner_waves[3] = GerstnerWave(vec2(-0.866f, -0.5f), 2.2f, 0.9f, 0.05f, 1.8f);
+    gerstner_waves[4] = GerstnerWave(vec2(-0.866f, -0.5f), 1.4f, 1.3f, 0.02f, 1.0f);
 }
 
 vec3 gerstner_wave_normal(vec3 position, float time) {
@@ -36,7 +37,7 @@ vec3 gerstner_wave_normal(vec3 position, float time) {
               psi = proj * gerstner_waves[i].frequency + phase,
               Af = gerstner_waves[i].amplitude *
                    gerstner_waves[i].frequency,
-              alpha = Af * sin(psi);
+              alpha = Af * sin(psi) ;
 
         //this line seems to be causing the inverted normals problem
         //wave_normal.y -= gerstner_waves[i].steepness * alpha;
@@ -148,7 +149,9 @@ void main()
     vec3 n;
 
     // displace the vertices
-    result = gerstner_wave(result.xz, time, n);
+    // for(int i = 0;i<4;i++){
+        result = gerstner_wave(result.xz, time, n);
+    // }
     TEPosition = vec4(result, 1.0);
 
     // Transform to clip coordinates

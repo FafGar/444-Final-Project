@@ -23,10 +23,10 @@ void main()
         // ----------------------------------------------------------------------
         // Step 1: define constants to control tessellation parameters
         // set these as desired for your world scale
-        const int MIN_TESS_LEVEL = 4;
-        const int MAX_TESS_LEVEL = 64;
-        const float MIN_DISTANCE = 20;
-        const float MAX_DISTANCE = 800;
+        const int MIN_TESS_LEVEL = 2;
+        const int MAX_TESS_LEVEL = 32;
+        const float MIN_DISTANCE = 4;
+        const float MAX_DISTANCE = 50;
 
         // ----------------------------------------------------------------------
         // Step 2: transform each vertex into eye space
