@@ -280,10 +280,18 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if(key == GLFW_KEY_D)
         rotateCam(camRotSpeed);
 
-    if(key == GLFW_KEY_Q)
-        cameraPos -= glm::vec3(0.0,1.0,0.0) * camSpeed;
-    if(key == GLFW_KEY_E)
-        cameraPos += glm::vec3(0.0,1.0,0.0) * camSpeed;
+    if(key == GLFW_KEY_Q){
+        glm::vec3 camright = glm::cross(glm::vec3(0.0,1.0,0.0), camZVec);
+        glm::vec3 camup = glm::cross(camright, camZVec);
+        cameraPos += camup * camSpeed;
+        //std::cout << camup.x << "," << camup.y << " " << camup.z << std::endl;
+    }
+
+    if(key == GLFW_KEY_E){
+        glm::vec3 camright = glm::cross(glm::vec3(0.0,1.0,0.0), camZVec);
+        glm::vec3 camup = glm::cross(camright, camZVec);
+        cameraPos -= camup * camSpeed;
+    }
 
 
 }

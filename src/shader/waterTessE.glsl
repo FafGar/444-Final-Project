@@ -38,7 +38,8 @@ vec3 gerstner_wave_normal(vec3 position, float time) {
                    gerstner_waves[i].frequency,
               alpha = Af * sin(psi);
 
-        wave_normal.y -= gerstner_waves[i].steepness * alpha;
+        //this line seems to be causing the inverted normals problem
+        //wave_normal.y -= gerstner_waves[i].steepness * alpha;
 
         float x = gerstner_waves[i].direction.x,
               y = gerstner_waves[i].direction.y,
@@ -46,7 +47,7 @@ vec3 gerstner_wave_normal(vec3 position, float time) {
 
         wave_normal.x -= x * omega;
         wave_normal.z -= y * omega;
-    } return wave_normal;
+    } return normalize(wave_normal);
 }
 
 vec3 gerstner_wave_position(vec2 position, float time) {
@@ -144,10 +145,7 @@ void main()
 
 	result.z = f1u*b1+f2u*b2+f3u*b3+f4u*b4;
 
-    //linearly interpolate the normal for simplicity
-    du = (1-mu)*(1-mv)*du00+(1-mu)*(mv)*du01+(mu)*(1-mv)*du10+(mu)*(mv)*du11;
-    dv = (1-mu)*(1-mv)*dv00+(1-mu)*(mv)*dv01+(mu)*(1-mv)*dv10+(mu)*(mv)*dv11;
-    vec3 n = normalize( cross(dv.xyz, du.xyz) );
+    vec3 n;
 
     // displace the vertices
     result = gerstner_wave(result.xz, time, n);
@@ -159,4 +157,5 @@ void main()
     // Convert to camera coordinates
     TEPosition = ModelViewMatrix * TEPosition;
     TENormal = normalize(NormalMatrix * n);
+
 }
