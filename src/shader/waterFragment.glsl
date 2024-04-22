@@ -8,6 +8,8 @@ uniform vec4 LightPosition;
 uniform vec3 LightIntensity;
 uniform vec3 Kd;
 
+uniform mat4 ModelViewMatrix;
+
 noperspective in vec3 EdgeDistance;
 in vec3 Normal;
 in vec4 Position;
@@ -68,6 +70,16 @@ vec3 microfacetModel(vec3 position, vec3 n ) {
   return (diffuseBrdf + PI * specBrdf) * lightI * nDotL;
 }
 
+float map(float value, float min1, float max1, float min2, float max2) {
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
+float clamp(float v, float min, float max){
+  if(v > max){v=max;}
+  if(v < min){v=min;}
+  return v;
+}
+
 void main()
 {
 
@@ -78,13 +90,21 @@ void main()
 
     Material.Rough = 0.1;
     Material.Metal = false;
-    //Material.Color = vec3(0.25,0.5,1);
-    Material.Color = vec3(15.0/255.0,206.0/255.0,255.0/255.0);
+
+    vec3 c1 = vec3(3.0/255.0,89.0/255.0,115.0/255.0);
+    vec3 c2 = vec3(15.0/255.0,206.0/255.0,255.0/255.0);
+    //fake water transmission
+    vec3 worldPos = vec3(inverse(ModelViewMatrix)*Position);
+    float ymix = map(worldPos.y, -3, 3, 0, 1);
+    ymix = clamp(ymix, 0,1);
+    Material.Color = mix(c1, c2, ymix);
 
     vec3 surfaceColor = vec3(0);
     vec3 n = normalize(Normal);
     vec3 pos = vec3(Position);
     vec3 ambient = vec3(0.01);
+
+
 
     surfaceColor = microfacetModel(pos, n) + ambient;
     // Gamma
