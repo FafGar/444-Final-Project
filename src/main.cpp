@@ -298,6 +298,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         cameraPos -= camup * camSpeed;
     }
 
+    if(key==GLFW_KEY_P) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//controlling if things are rendered wireframe or not
+    if(key==GLFW_KEY_L) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 
 }
 
@@ -454,7 +457,7 @@ int main(void)
 
     vector<GLfloat> patchData;
 
-    createSurface(10);
+    createSurface(50);
 
     int index = 0;
     for (i=0;i<M-1;i++) {
@@ -622,16 +625,16 @@ int main(void)
 
 
 
-        // glUseProgram(pointProgram);
-        // glUniformMatrix4fv(glGetUniformLocation(pointProgram,"projection"), 1, GL_FALSE, &(projection[0][0]));
-        // glUniformMatrix4fv(glGetUniformLocation(pointProgram,"view"), 1, GL_FALSE, &(view[0][0]));
-        // for (i=0;i<M;i++) {
-        //     for (j=0;j<N;j++) {
-        //         model = glm::translate(glm::mat4(1.0), controlPoints[i][j]);
-        //         glUniformMatrix4fv(glGetUniformLocation(pointProgram,"model"), 1, GL_FALSE, &(model[0][0]));
-        //         cube.render();
-        //     }
-        // }
+        glUseProgram(pointProgram);
+        glUniformMatrix4fv(glGetUniformLocation(pointProgram,"projection"), 1, GL_FALSE, &(projection[0][0]));
+        glUniformMatrix4fv(glGetUniformLocation(pointProgram,"view"), 1, GL_FALSE, &(view[0][0]));
+        for (i=0;i<M;i++) {
+            for (j=0;j<N;j++) {
+                model = glm::translate(glm::mat4(1.0), controlPoints[i][j]);
+                glUniformMatrix4fv(glGetUniformLocation(pointProgram,"model"), 1, GL_FALSE, &(model[0][0]));
+                cube.render();
+            }
+        }
 
 
 		showFPS(window);

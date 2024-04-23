@@ -1,6 +1,6 @@
 #version 400
 
-layout( quads ) in;
+layout( quads, fractional_odd_spacing, ccw) in;
 
 out vec3 TENormal;
 out vec4 TEPosition;

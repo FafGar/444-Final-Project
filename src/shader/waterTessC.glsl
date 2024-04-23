@@ -6,6 +6,8 @@ uniform int TessLevel;
 uniform mat4 view;
 uniform mat4 model;
 
+uniform mat4 ModelViewMatrix;
+
 void main()
 {
     // Pass along the vertex position unmodified
@@ -23,17 +25,17 @@ void main()
         // ----------------------------------------------------------------------
         // Step 1: define constants to control tessellation parameters
         // set these as desired for your world scale
-        const int MIN_TESS_LEVEL = 2;
-        const int MAX_TESS_LEVEL = 32;
-        const float MIN_DISTANCE = 4;
-        const float MAX_DISTANCE = 50;
+        const int MIN_TESS_LEVEL = 1;
+        const int MAX_TESS_LEVEL = 16;
+        const float MIN_DISTANCE = 10;
+        const float MAX_DISTANCE = 400;
 
         // ----------------------------------------------------------------------
         // Step 2: transform each vertex into eye space
-        vec4 eyeSpacePos00 = view * model * gl_in[0].gl_Position;
-        vec4 eyeSpacePos01 = view * model * gl_in[1].gl_Position;
-        vec4 eyeSpacePos10 = view * model * gl_in[2].gl_Position;
-        vec4 eyeSpacePos11 = view * model * gl_in[3].gl_Position;
+        vec4 eyeSpacePos00 = ModelViewMatrix * gl_in[0].gl_Position;
+        vec4 eyeSpacePos01 = ModelViewMatrix * gl_in[1].gl_Position;
+        vec4 eyeSpacePos10 = ModelViewMatrix * gl_in[2].gl_Position;
+        vec4 eyeSpacePos11 = ModelViewMatrix * gl_in[3].gl_Position;
 
         // ----------------------------------------------------------------------
         // Step 3: "distance" from camera scaled between 0 and 1
