@@ -26,7 +26,7 @@ GLuint program;
 GLuint pointProgram;
 
 vec3 cameraPos;
-vec3 lookAtPoint = vec3(10,0,10);
+vec3 lookAtPoint = vec3(0,0,0);
 vec3 camZVec;
 float camSpeed = 2.0f;
 float camRotSpeed = 2.5f;
@@ -548,7 +548,7 @@ int main(void)
     glUniform1i(glGetUniformLocation(program,"TessLevel"), tessLevel);
     glUniform1f(glGetUniformLocation(program,"LineWidth"), 0.8f);
     glUniform4f(glGetUniformLocation(program,"LineColor"), 0.05f,0.0f,0.05f,1.0f);
-    glUniform4f(glGetUniformLocation(program,"LightPosition"), 0.0f,0.0f,0.0f,1.0f);
+    glUniform4f(glGetUniformLocation(program,"LightPosition"), 0.0f,1.0f,0.0f,0.0f);
     glUniform3f(glGetUniformLocation(program,"LightIntensity"), 1.0f,1.0f,1.0f);
     glUniform3f(glGetUniformLocation(program,"Kd"), 0.9f,0.9f,1.0f);
 

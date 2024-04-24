@@ -49,7 +49,7 @@ vec3 microfacetModel(vec3 position, vec3 n ) {
   }
 
   vec3 l = vec3(0.0), 
-    lightI = LightIntensity * 25000;
+    lightI = LightIntensity * 1;
   if( LightPosition.w == 0.0 ) { // Directional light
     l = normalize(LightPosition.xyz);
   } else {                                  // Positional light
@@ -100,11 +100,9 @@ void main()
     Material.Color = mix(c1, c2, ymix);
 
     vec3 surfaceColor = vec3(0);
-    vec3 n = normalize(Normal);
+    vec3 n = vec3(normalize(Normal));
     vec3 pos = vec3(Position);
     vec3 ambient = vec3(0.01);
-
-
 
     surfaceColor = microfacetModel(pos, n) + ambient;
     // Gamma
