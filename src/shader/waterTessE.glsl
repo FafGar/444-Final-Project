@@ -29,6 +29,31 @@ void initializeGerstnerWaves() {
     gerstner_waves[4] = GerstnerWave(vec2(-0.707f, -0.866f), 6.6f, 0.9f, 0.02f, 0.5f);
 }
 
+vec3 gradients[16];
+int table[16];
+
+void initNoise() {
+    int i;
+    gradients[0] = vec3(0, -1, -1);
+    gradients[1] = vec3(1, 0, -1);
+    gradients[2] = vec3(0, -1, 1);
+    gradients[3] = vec3(0, 1, -1);
+    gradients[4] = vec3(1, -1, 0);
+    gradients[5] = vec3(1, 1, 0);
+    gradients[6] = vec3(-1, 1, 0);
+    gradients[7] = vec3(0, 1, 1);
+    gradients[8] = vec3(-1, 0, -1);
+    gradients[9] = vec3(1, 1, 0);
+    gradients[10] = vec3(-1, 1, 0);
+    gradients[11] = vec3(-1, -1, 0);
+    gradients[12] = vec3(1, 0, 1);
+    gradients[13] = vec3(-1, 0, 1);
+    gradients[14] = vec3(0, -1, 1);
+    gradients[15] = vec3(0, -1, -1);
+    for (i=0;i<16;i++)
+        table[i]=i;
+}
+
 vec3 gerstner_wave_normal(vec3 position, float time) {
     vec3 wave_normal = vec3(0.0, 1.0, 0.0);
     for (int i = 0; i < 4; ++i) {
@@ -79,10 +104,53 @@ vec3 gerstner_wave(vec2 position, float time, inout vec3 normal) {
 }
 
 // END stuff added for waves
+float smoothingFunc(float t)
+{
+    t = (t > 0.) ? t : -t;
+
+    float t3 = t * t * t;
+    float t4 = t3 * t;
+
+    return -6 * t4 * t + 15 * t4 - 10 * t3 + 1.;
+}
+
+float randomNumber(float u, float v, int i, int j)
+{
+    int idx;
+    idx = table[abs(j) % 16];
+    idx = table[abs(i + idx) % 16];
+
+    vec2 gijk = gradients[idx].xy;
+    vec2 uvw = vec2(u, v);
+
+    return smoothingFunc(u) * smoothingFunc(v) * dot(gijk, uvw); 
+}
+
+float perlin(vec2 pos, float scalingFactor)
+{
+    float x = scalingFactor * pos.x;
+    float y = scalingFactor * pos.y;
+
+    int xmin = int(floor(x));
+    int ymin = int(floor(y));
+
+    float n = 0;
+    for (int i = xmin; i <= xmin + 1; ++i)
+    {
+        for (int j = ymin; j <= ymin + 1; ++j)
+        {
+                n += randomNumber(x - i, y - j, i, j);
+        }
+    }
+
+    //return (n + 1.) / 2.;
+    return abs(n);
+}
 
 void main()
 {
     initializeGerstnerWaves();
+    initNoise();
 
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
@@ -152,6 +220,7 @@ void main()
     // for(int i = 0;i<4;i++){
         result = gerstner_wave(result.xz, time, n);
     // }
+    result.y+=perlin(result.xz + vec2(time*4),0.05)*result.y/2;
     TEPosition = vec4(result, 1.0);
 
     // Transform to clip coordinates
