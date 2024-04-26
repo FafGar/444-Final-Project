@@ -40,6 +40,7 @@ int nFrames;
 float tPrev, t, deltaT;
 
 bool gLeftPressed = false;
+bool centerModel = false;
 
 vec3 **controlPoints;
 vec3 **du, **dv;
@@ -296,6 +297,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glm::vec3 camright = glm::cross(glm::vec3(0.0,1.0,0.0), camZVec);
         glm::vec3 camup = glm::cross(camright, camZVec);
         cameraPos -= camup * camSpeed;
+    }
+
+    if(key == GLFW_KEY_C && action == GLFW_PRESS){
+        centerModel = !centerModel;
     }
 
     if(key==GLFW_KEY_P) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//controlling if things are rendered wireframe or not
@@ -594,7 +599,9 @@ int main(void)
         view = glm::lookAt(cameraPos, lookAtPoint, vec3(0.0f,1.0f,0.0f));
 
         model = mat4(1.0f);
-        //model = glm::translate(model, vec3(0.0f,-1.5f,0.0f));
+        if(centerModel){
+            model = glm::translate(model, vec3(-800.0f,0.0f,-800.0f));
+        }
         //model = glm::rotate(model,glm::radians(-90.0f), vec3(1.0f,0.0f,0.0f));
 
     	projection = glm::perspective(glm::radians(60.0f), (float)width/height, 1.0f, 1000.0f);

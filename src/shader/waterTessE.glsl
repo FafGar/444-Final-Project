@@ -19,14 +19,16 @@ struct GerstnerWave {
     float steepness;
     float frequency;
     float speed;
-} gerstner_waves[5];
+} gerstner_waves[7];
 
 void initializeGerstnerWaves() {
-    gerstner_waves[0] = GerstnerWave(vec2(0.707f, 0.707f), 1.9f, 0.4f, 0.05f, 0.7f);
-    gerstner_waves[1] = GerstnerWave(vec2(-0.5f, 0.866f), 4.5f, 0.6f, 0.01f, 0.8f);
-    gerstner_waves[2] = GerstnerWave(vec2(0.258f, -0.966f), 0.8f, 0.4f, 0.06f, 0.2f);
-    gerstner_waves[3] = GerstnerWave(vec2(-0.866f, -0.5f), 2.2f, 0.8f, 0.05f, 0.4f);
-    gerstner_waves[4] = GerstnerWave(vec2(-0.707f, -0.866f), 6.6f, 0.9f, 0.02f, 0.5f);
+    gerstner_waves[0] = GerstnerWave(vec2(0.707f, 0.707f), 2.0f, 1.5f, 0.05f, 0.7f);
+    gerstner_waves[1] = GerstnerWave(vec2(-0.5f, 0.866f), 2.7f, 3.8f, 0.01f, 0.8f);
+    gerstner_waves[2] = GerstnerWave(vec2(0.6f, 0.5f), 3.2f, 1.7f, 0.02f, 0.7f);
+    gerstner_waves[3] = GerstnerWave(vec2(0.258f, -0.966f), 1.9f, 1.4f, 0.06f, 4.2f);
+    gerstner_waves[3] = GerstnerWave(vec2(0.858f, 0.166f), 0.5f, 1.4f, 0.2f, 5.2f);
+    gerstner_waves[4] = GerstnerWave(vec2(-0.866f, -0.5f), 2.5f, 1.8f, 0.05f, 0.4f);
+    gerstner_waves[5] = GerstnerWave(vec2(-0.707f, -0.866f), 6.6f, 1.9f, 0.02f, 0.5f);
 }
 
 vec3 gradients[16];
@@ -56,7 +58,7 @@ void initNoise() {
 
 vec3 gerstner_wave_normal(vec3 position, float time) {
     vec3 wave_normal = vec3(0.0, 1.0, 0.0);
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 6; ++i) {
         float proj = dot(position.xz, gerstner_waves[i].direction),
               phase = time * gerstner_waves[i].speed,
               psi = proj * gerstner_waves[i].frequency + phase,
@@ -78,7 +80,7 @@ vec3 gerstner_wave_normal(vec3 position, float time) {
 
 vec3 gerstner_wave_position(vec2 position, float time) {
     vec3 wave_position = vec3(position.x, 0, position.y);
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 6; ++i) {
         float proj = dot(position, gerstner_waves[i].direction),
               phase = time * gerstner_waves[i].speed,
               theta = proj * gerstner_waves[i].frequency + phase,

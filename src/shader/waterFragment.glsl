@@ -9,6 +9,7 @@ uniform vec3 LightIntensity;
 uniform vec3 Kd;
 
 uniform mat4 ModelViewMatrix;
+uniform mat3 NormalMatrix;
 
 uniform float time;
 
@@ -117,7 +118,7 @@ void main()
     //FragColor = mix( color, LineColor, mixVal );
     //FragColor = color;
 
-    Material.Rough = 0.1;
+    Material.Rough = 0.05;
     Material.Metal = false;
 
     vec3 c1 = vec3(0.0/255.0,123.0/255.0,144.0/255.0);
@@ -135,9 +136,9 @@ void main()
     if(ptest < 0){
       ptest = 0;
     }
-    if(ymix >= 0.95f - (ptest*0.25)){
+    if(ymix >= 0.98f - (ptest*0.25)){
       Material.Color = vec3(0.9,0.9,1.0);
-      Material.Rough = 0.5;
+      Material.Rough = 0.2;
     }else{
       Material.Color = mix(c1, c2, ymix); 
     }
@@ -145,12 +146,14 @@ void main()
     vec3 surfaceColor = vec3(0);
     vec3 n = vec3(normalize(Normal));
     vec3 pos = vec3(Position);
-    vec3 ambient = vec3(0.01);
 
+
+    vec3 ambient = c1 * 0.01;
     surfaceColor = microfacetModel(pos, n) + ambient;
     // Gamma
     surfaceColor = pow( surfaceColor, vec3(1.0/2.2) );
     FragColor = vec4(surfaceColor, 1);
+    //FragColor = vec4(n, 1);
 
     //float ptest = perlin(vec2(worldPos.x,worldPos.z), 0.1, time*0.0000001);
     //FragColor = vec4(ptest,ptest,ptest,1.0);
