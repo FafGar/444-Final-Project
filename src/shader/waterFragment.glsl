@@ -120,17 +120,23 @@ void main()
     Material.Rough = 0.1;
     Material.Metal = false;
 
-    vec3 c1 = vec3(3.0/255.0,89.0/255.0,115.0/255.0);
-    vec3 c2 = vec3(15.0/255.0,206.0/255.0,255.0/255.0);
+    vec3 c1 = vec3(0.0/255.0,123.0/255.0,144.0/255.0);
+    vec3 c2 = vec3(2.0/255.0,221.0/255.0,216.0/255.0);
     //fake water transmission
     vec3 worldPos = vec3(inverse(ModelViewMatrix)*Position);
-    float ymix = map(worldPos.y, -7, 7, 0, 1);
+    float ymix = map(worldPos.y, -3, 8, 0, 1);
     ymix = clamp(ymix, 0,1);
+    ymix=ymix*ymix;
     Material.Color = mix(c1, c2, ymix);
 
-    float ptest = perlin(vec2(worldPos.x,worldPos.z), 0.1, time*0.0000001);
-    if(ymix >= 0.9f && ptest > 0.5){
+    //calculate and replace color and reflectivity 
+    float ptest = perlin(vec2(worldPos.x,worldPos.z), 0.25, time*0.00000001);
+    if(ptest < 0){
+      ptest = 0;
+    }
+    if(ymix >= 0.99f - (ptest*0.25)){
       Material.Color = vec3(0.9,0.9,1.0);
+      Material.Rough = 0.5;
     }
 
     vec3 surfaceColor = vec3(0);
