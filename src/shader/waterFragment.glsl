@@ -122,21 +122,24 @@ void main()
 
     vec3 c1 = vec3(0.0/255.0,123.0/255.0,144.0/255.0);
     vec3 c2 = vec3(2.0/255.0,221.0/255.0,216.0/255.0);
-    //fake water transmission
+    //calculate world position
     vec3 worldPos = vec3(inverse(ModelViewMatrix)*Position);
+
+    //calculate height lerp value
     float ymix = map(worldPos.y, -3, 8, 0, 1);
     ymix = clamp(ymix, 0,1);
     ymix=ymix*ymix;
-    Material.Color = mix(c1, c2, ymix);
 
-    //calculate and replace color and reflectivity 
-    float ptest = perlin(vec2(worldPos.x,worldPos.z), 0.25, time*0.00000001);
+    //calculate color and replace color and reflectivity based on noise
+    float ptest = (perlin(vec2(worldPos.x,worldPos.z), 0.5, time*0.00000001) + perlin(vec2(worldPos.x,worldPos.z), 0.2, time*0.0000001)) * 0.5;
     if(ptest < 0){
       ptest = 0;
     }
-    if(ymix >= 0.99f - (ptest*0.25)){
+    if(ymix >= 0.95f - (ptest*0.25)){
       Material.Color = vec3(0.9,0.9,1.0);
       Material.Rough = 0.5;
+    }else{
+      Material.Color = mix(c1, c2, ymix); 
     }
 
     vec3 surfaceColor = vec3(0);
