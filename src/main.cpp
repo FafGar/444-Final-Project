@@ -313,11 +313,11 @@ void showFPS(GLFWwindow* window) {
         double currentTime = glfwGetTime();
         double delta = currentTime - lastTime;
 	    char ss[500] = {};
-		std::string wTitle = "Lab07";
+		std::string wTitle = "Stylized Water";
         nFrames++;
         if ( delta >= 1.0 ){ // If last update was more than 1 sec ago
             double fps = ((double)(nFrames)) / delta;
-            sprintf(ss,"%s running at %lf FPS. TessLevel = %d.",wTitle.c_str(),fps,tessLevel);
+            sprintf(ss,"%s running at %lf FPS",wTitle.c_str(),fps);
             glfwSetWindowTitle(window, ss);
             nFrames = 0;
             lastTime = currentTime;
@@ -418,7 +418,7 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    window = glfwCreateWindow(800, 600, "Lab07", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "Stylized Water", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -632,16 +632,16 @@ int main(void)
 
 
 
-        glUseProgram(pointProgram);
-        glUniformMatrix4fv(glGetUniformLocation(pointProgram,"projection"), 1, GL_FALSE, &(projection[0][0]));
-        glUniformMatrix4fv(glGetUniformLocation(pointProgram,"view"), 1, GL_FALSE, &(view[0][0]));
-        for (i=0;i<M;i++) {
-            for (j=0;j<N;j++) {
-                model = glm::translate(glm::mat4(1.0), controlPoints[i][j]);
-                glUniformMatrix4fv(glGetUniformLocation(pointProgram,"model"), 1, GL_FALSE, &(model[0][0]));
-                cube.render();
-            }
-        }
+        // glUseProgram(pointProgram);
+        // glUniformMatrix4fv(glGetUniformLocation(pointProgram,"projection"), 1, GL_FALSE, &(projection[0][0]));
+        // glUniformMatrix4fv(glGetUniformLocation(pointProgram,"view"), 1, GL_FALSE, &(view[0][0]));
+        // for (i=0;i<M;i++) {
+        //     for (j=0;j<N;j++) {
+        //         model = glm::translate(glm::mat4(1.0), controlPoints[i][j]);
+        //         glUniformMatrix4fv(glGetUniformLocation(pointProgram,"model"), 1, GL_FALSE, &(model[0][0]));
+        //         cube.render();
+        //     }
+        // }
 
 
 		showFPS(window);
